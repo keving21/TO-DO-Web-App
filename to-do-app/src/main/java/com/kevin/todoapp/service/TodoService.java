@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kevin.todoapp.domain.TodoItem;
 import com.kevin.todoapp.repository.TodoRepository;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -16,5 +17,20 @@ public class TodoService {
 	
 	public List<TodoItem> fetchAllTodoItems (){
 		return todoRepo.fetchAllTodoItems();
+	}
+
+	public TodoItem updateTodoItem(Integer id, TodoItem todoItem) {
+		Optional<TodoItem> todoOpt = todoRepo.fetchAllTodoItems()
+											 .stream()
+											 .filter(item -> item.getId().equals(id))
+											 .findAny();
+		
+		if(todoOpt.isPresent()) {
+			TodoItem item = todoOpt.get();
+			item.setIsDone(todoItem.getIsDone());
+			item.setTask(todoItem.getTask());
+			return item;
+		}
+		return null;
 	}
 }
